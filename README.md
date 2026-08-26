@@ -29,7 +29,7 @@ AI-powered inventory forecasting and purchase order automation with 100% human a
 5. Human reviews and edits the draft
 6. Clicks "Review and Send"
 7. PDF generated and attached
-8. Email sent to supplier ✅
+8. Email sent to supplier 
 
 ## Quick Start
 
