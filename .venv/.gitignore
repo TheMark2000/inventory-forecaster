@@ -1,0 +1,8 @@
+# .gitignore
+.env
+venv/
+__pycache__/
+*.db
+*.pkl
+.secrets
+.streamlit/secrets.toml
