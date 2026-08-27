@@ -48,9 +48,8 @@ except Exception as e:
     print(f"SendGrid error: {e}")
     HAS_EMAIL = False
 
-    # ============================================
-# ENSURE DATABASE AND MODEL EXIST   ← INSERT THIS BLOCK
-# ============================================
+
+# ENSURE DATABASE AND MODEL EXIST
 
 def ensure_database():
     """Create database with mock data if it doesn't exist"""
@@ -60,9 +59,9 @@ def ensure_database():
         try:
             from data_mock import create_mock_data
             create_mock_data()
-            print("✅ Database created with mock data")
+            print("Database created with mock data")
         except ImportError:
-            print("⚠️ data_mock.py not found. Creating empty database.")
+            print("data_mock.py not found. Creating empty database.")
             conn = sqlite3.connect(db_path)
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS inventory_history (
@@ -83,8 +82,8 @@ def ensure_model():
     os.makedirs('models', exist_ok=True)
     
     if not os.path.exists(model_path) or not os.path.exists(schema_path):
-        st.warning("⚠️ ML model not found. Please run train_model.py locally and commit model files.")
-        st.info("💡 On your local machine, run: python train_model.py")
+        st.warning("ML model not found. Please run train_model.py locally and commit model files.")
+        st.info("On your local machine, run: python train_model.py")
         st.stop()
 
 # Run checks
@@ -92,9 +91,7 @@ ensure_database()
 ensure_model()
 
 
-# ============================================
 # PDF GENERATION FUNCTIONS
-# ============================================
 
 def generate_pdf_order(supplier, items_to_order, order_date, delivery_date):
     """Generate a professional PDF purchase order WITHOUT prices"""
@@ -205,9 +202,7 @@ def get_pdf_download_link(pdf_buffer, filename):
     href = f'<a href="data:application/pdf;base64,{b64}" download="{filename}" style="text-decoration:none; background-color:#4CAF50; color:white; padding:10px 20px; border-radius:5px; display:inline-block; width:100%; text-align:center;">Download PDF</a>'
     return href
 
-# ============================================
 # EMAIL SENDING FUNCTION - ADD THIS
-# ============================================
 
 def send_order_email(to_email, from_email, supplier, order_text, pdf_buffer):
     """Send email with PDF attachment using SendGrid"""
@@ -258,9 +253,7 @@ def send_order_email(to_email, from_email, supplier, order_text, pdf_buffer):
     response = sg.send(message)
     return response.status_code == 202
 
-# ============================================
 # STREAMLIT APP
-# ============================================
 
 st.set_page_config(page_title="Smart Inventory Forecaster", layout="wide")
 st.title("Smart Inventory Forecaster")
@@ -363,9 +356,7 @@ with st.sidebar:
             st.session_state.email_sent = False
             st.rerun()
 
-# ============================================
 # MAIN AREA - FORECAST RESULTS
-# ============================================
 
 if st.session_state.run_forecast:
     
@@ -502,9 +493,7 @@ Please confirm receipt and provide pricing for the above items.
         )
         st.session_state.draft = edited_draft
         
-        # ============================================
         # APPROVAL BUTTONS - UPDATED with email sending
-        # ============================================
         if st.session_state.order_status is None:
             st.divider()
             st.subheader("Human Approval Required")
@@ -569,10 +558,9 @@ Please confirm receipt and provide pricing for the above items.
                 if st.button("Defer", use_container_width=True):
                     st.session_state.order_status = 'deferred'
                     st.rerun()
-        
-        # ============================================
+    
         # STATUS MESSAGES - UPDATED
-        # ============================================
+
         if st.session_state.order_status == 'sent' and st.session_state.email_sent:
             st.divider()
             st.success(f"Order sent from: {st.session_state.sender_email} → {st.session_state.supplier_email}")
